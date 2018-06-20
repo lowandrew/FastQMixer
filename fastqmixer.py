@@ -28,17 +28,20 @@ def mix_fastqs(genome_size, base_genome, contaminant_genome, fraction_contaminat
     if not os.path.isdir(tmpdir):
         os.makedirs(tmpdir)
     # Subsample our base genome to desired coverage level.
-    bbtools.subsample_reads(forward_in=base_genome + '_R1.fastq.gz',
-                            forward_out=os.path.join(tmpdir, base_genome + '_R1.fastq.gz'),
-                            reverse_in=base_genome + '_R2.fastq.gz',
-                            reverse_out=os.path.join(tmpdir, base_genome + '_R2.fastq.gz'),
-                            num_bases=str(genome_size * (1.0 - fraction_contamination) * depth))
+    # BBTools think we want to sample everything if num bases is set to 0, so don't do if that is the case.
+    if 1.0 - fraction_contamination != 0.0:
+        bbtools.subsample_reads(forward_in=base_genome + '_R1.fastq.gz',
+                                forward_out=os.path.join(tmpdir, base_genome + '_R1.fastq.gz'),
+                                reverse_in=base_genome + '_R2.fastq.gz',
+                                reverse_out=os.path.join(tmpdir, base_genome + '_R2.fastq.gz'),
+                                num_bases=str(genome_size * (1.0 - fraction_contamination) * depth))
     # Repeat process for contaminant genome
-    bbtools.subsample_reads(forward_in=contaminant_genome + '_R1.fastq.gz',
-                            forward_out=os.path.join(tmpdir, contaminant_genome + '_R1.fastq.gz'),
-                            reverse_in=contaminant_genome + '_R2.fastq.gz',
-                            reverse_out=os.path.join(tmpdir, contaminant_genome + '_R2.fastq.gz'),
-                            num_bases=str(genome_size * fraction_contamination * depth))
+    if fraction_contamination != 0.0:
+        bbtools.subsample_reads(forward_in=contaminant_genome + '_R1.fastq.gz',
+                                forward_out=os.path.join(tmpdir, contaminant_genome + '_R1.fastq.gz'),
+                                reverse_in=contaminant_genome + '_R2.fastq.gz',
+                                reverse_out=os.path.join(tmpdir, contaminant_genome + '_R2.fastq.gz'),
+                                num_bases=str(genome_size * fraction_contamination * depth))
     # Mix together the two sets of subsampled reads.
     cmd = 'cat {base_genome_forward} {contaminant_genome_forward} > ' \
           '{output_filename}'.format(base_genome_forward=os.path.join(tmpdir, base_genome + '_R1.fastq.gz'),
