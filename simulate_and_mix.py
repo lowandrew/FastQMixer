@@ -44,6 +44,8 @@ if __name__ == '__main__':
 
     if not os.path.isdir(args.tmpdir):
         os.makedirs(args.tmpdir)
+    if not os.path.isdir(args.output_directory):
+        os.makedirs(args.output_directory)
 
     # Create FASTQs for contaminant and base genome, put them in the tmpdir for this run.
     fastqmixer.create_fastq_from_fasta(fasta_file=args.contaminant_fasta,
