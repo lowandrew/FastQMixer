@@ -27,7 +27,7 @@ if __name__ == '__main__':
     parser.add_argument('-d', '--depth',
                         type=float,
                         default=60,
-                        help='Coverage depth desired for output genome.')
+                        help='Coverage depth desired for output genome. Defaults to 60X.')
     parser.add_argument('-t', '--tmpdir',
                         type=str,
                         default=str(time.time()).split('.')[0],
@@ -36,6 +36,10 @@ if __name__ == '__main__':
                         type=float,
                         required=True,
                         help='Contamination fraction. Must be between 0 and 1.')
+    parser.add_argument('-o', '--output_directory',
+                        type=str,
+                        default=os.getcwd(),
+                        help='Output directory for your FASTQ files. Defaults to current working directory.')
     args = parser.parse_args()
 
     if not os.path.isdir(args.tmpdir):
@@ -55,6 +59,7 @@ if __name__ == '__main__':
                           depth=args.depth,
                           fraction_contamination=args.fraction_contamination)
     final_output_name = os.path.split(args.base_fasta)[-1].split('.')[0] + '_' + os.path.split(args.contaminant_fasta)[-1].split('.')[0]
+    final_output_name = os.path.join(args.output_directory, final_output_name)
     cmd = 'mv sim_contam_R1.fastq.gz {output}_{fc}_R1.fastq.gz'.format(output=final_output_name,
                                                                        fc=args.fraction_contamination)
     os.system(cmd)

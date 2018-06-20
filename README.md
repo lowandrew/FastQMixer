@@ -21,6 +21,7 @@ Clone this repository - you'll want to use the `simulate_and_mix.py` script.
 ```
 usage: simulate_and_mix.py [-h] -bf BASE_FASTA -cf CONTAMINANT_FASTA
                            [-d DEPTH] [-t TMPDIR] -fc FRACTION_CONTAMINATION
+                           [-o OUTPUT_DIRECTORY]
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -29,12 +30,13 @@ optional arguments:
   -cf CONTAMINANT_FASTA, --contaminant_fasta CONTAMINANT_FASTA
                         Path to fasta-formatted file for base genome.
   -d DEPTH, --depth DEPTH
-                        Coverage depth desired for output genome.
+                        Coverage depth desired for output genome. Defaults to
+                        60X.
   -t TMPDIR, --tmpdir TMPDIR
                         Temporary directory name.
   -fc FRACTION_CONTAMINATION, --fraction_contamination FRACTION_CONTAMINATION
                         Contamination fraction. Must be between 0 and 1.
-
+  -o OUTPUT_DIRECTORY, --output_directory OUTPUT_DIRECTORY
+                        Output directory for your FASTQ files. Defaults to
+                        current working directory.
 ```
-
-
